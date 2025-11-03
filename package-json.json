@@ -1,0 +1,29 @@
+{
+  "name": "starseed-voice-assistant",
+  "version": "3.0.0",
+  "description": "AI-powered voice assistant for health tracking and proactive wellness management",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/starseed-voice-assistant.git"
+  },
+  "keywords": [
+    "health",
+    "ai",
+    "voice-assistant",
+    "wellness",
+    "medication-tracker",
+    "mood-tracker",
+    "healthcare"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
