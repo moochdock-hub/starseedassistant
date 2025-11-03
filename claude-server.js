@@ -6,6 +6,9 @@ const app = express();
 app.use(express.json());
 
 const API_KEY = process.env.ANTHROPIC_API_KEY;
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-3-haiku-20240307';
+const ANTHROPIC_VERSION = process.env.ANTHROPIC_VERSION || '2023-06-01';
+
 if (!API_KEY) {
   console.error('Missing ANTHROPIC_API_KEY environment variable. See README_ANTHROPIC.md');
   process.exit(1);
@@ -16,19 +19,28 @@ app.post('/api/claude', async (req, res) => {
     const { prompt = '', max_tokens = 300 } = req.body || {};
 
     const payload = {
-      model: 'claude-2',
-      prompt,
-      max_tokens
+      model: MODEL,
+      max_tokens,
+      messages: [
+        { role: 'user', content: prompt }
+      ]
     };
 
-    const response = await fetch('https://api.anthropic.com/v1/complete', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`
+        'content-type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': ANTHROPIC_VERSION
       },
       body: JSON.stringify(payload)
     });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('Anthropic API error:', response.status, errText);
+      return res.status(response.status).json({ error: 'Anthropic API error', details: errText });
+    }
 
     const data = await response.json();
     res.json(data);
